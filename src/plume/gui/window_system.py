@@ -37,7 +37,7 @@ class WindowSystemController():
             pass
 
     def detach_sub_window(self, sub_window):
-        sub_window.setParent(None, Qt.Tool)
+        sub_window.setParent(None, Qt.Window)
         sub_window.show()
         self.window_dict[sub_window.objectName()] = [sub_window, "detached"]
 
@@ -140,9 +140,8 @@ class WindowSystemActionHandler():
         if sub_window_object_name is None:
             print(self.objectName() + " WindowSystemActionHandler action '" + sender_action
                   + "' lacks 'sub_window_object_name' property")
-            pass
+            return
 
-        _list = self._window_system_controller.window_dict[
-            sub_window_object_name]
+        _list = self._window_system_controller.window_dict[sub_window_object_name]
         sub_window = _list[0]
         return sub_window

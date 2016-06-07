@@ -5,6 +5,7 @@ Created on 25 avr. 2015
 '''
 
 from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtCore import Qt
 from . import cfg
 
 

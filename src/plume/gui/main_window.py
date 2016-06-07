@@ -5,13 +5,18 @@ Created on 25 avr. 2015
 @author: Cyril Jacquet
 '''
 
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QActionGroup,
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QActionGroup, QToolBar, QWidgetAction,
                              QHBoxLayout,  QFileDialog, QMessageBox,  QApplication, QUndoView)
 from PyQt5.QtCore import Qt,  QDir, QDate
 from .window_system import WindowSystemController
 from .write_panel import WritePanel
 from .note_panel import NotePanel
-from PyQt5.Qt import QToolButton, pyqtSlot, QUndoGroup
+from .binder_panel import BinderPanel
+from .table_panel import TablePanel
+from .cards_panel import CardsPanel
+from .info_panel import InfoPanel
+from .welcome_panel import WelcomePanel
+from PyQt5.Qt import QToolButton, pyqtSlot, QUndoGroup, QSettings, QByteArray
 from . import cfg
 from .main_window_ui import Ui_MainWindow
 from .preferences import Preferences
@@ -62,6 +67,16 @@ class MainWindow(QMainWindow, WindowSystemController):
         # sub_windows :
         self._sub_window_action_group = QActionGroup(self)
 
+        # welcome window
+        self.welcome_panel = WelcomePanel(
+            parent=self, parent_window_system_controller=self)
+        self.attach_sub_window(self.welcome_panel)
+        self.ui.actionWelcome.setProperty(
+            "sub_window_object_name", "welcome_panel")
+        self.add_action_to_window_system(self.ui.actionWelcome)
+        self._sub_window_action_group.addAction(self.ui.actionWelcome)
+
+
         # write window
         self.write_panel = WritePanel(
             parent=self, parent_window_system_controller=self)
@@ -71,7 +86,7 @@ class MainWindow(QMainWindow, WindowSystemController):
         self.add_action_to_window_system(self.ui.actionWrite)
         self._sub_window_action_group.addAction(self.ui.actionWrite)
 
-        # binder window
+        # note panel window
         self.note_panel = NotePanel(
             parent=self, parent_window_system_controller=self)
         self.attach_sub_window(self.note_panel)
@@ -80,6 +95,45 @@ class MainWindow(QMainWindow, WindowSystemController):
         self.add_action_to_window_system(self.ui.actionNote)
         self._sub_window_action_group.addAction(self.ui.actionNote)
 
+        # TODO: set the below panels as internal plugins
+
+        # binder panel window
+        self.binder_panel = BinderPanel(
+            parent=self, parent_window_system_controller=self)
+        self.attach_sub_window(self.binder_panel)
+        self.ui.actionBinder.setProperty(
+            "sub_window_object_name", "binder_panel")
+        self.add_action_to_window_system(self.ui.actionBinder)
+        self._sub_window_action_group.addAction(self.ui.actionBinder)
+
+         # table panel window
+        self.table_panel = TablePanel(
+            parent=self, parent_window_system_controller=self)
+        self.attach_sub_window(self.table_panel)
+        self.ui.actionTable.setProperty(
+            "sub_window_object_name", "table_panel")
+        self.add_action_to_window_system(self.ui.actionTable)
+        self._sub_window_action_group.addAction(self.ui.actionTable)
+
+        # cards panel window
+        self.cards_panel = CardsPanel(
+            parent=self, parent_window_system_controller=self)
+        self.attach_sub_window(self.cards_panel)
+        self.ui.actionCards.setProperty(
+            "sub_window_object_name", "cards_panel")
+        self.add_action_to_window_system(self.ui.actionCards)
+        self._sub_window_action_group.addAction(self.ui.actionCards)
+
+        # info panel window
+        self.info_panel = InfoPanel(
+            parent=self, parent_window_system_controller=self)
+        self.attach_sub_window(self.info_panel)
+        self.ui.actionInfo.setProperty(
+            "sub_window_object_name", "info_panel")
+        self.add_action_to_window_system(self.ui.actionInfo)
+        self._sub_window_action_group.addAction(self.ui.actionInfo)
+
+       # switch to Write panel by default
         self.ui.actionWrite.trigger()
 
 
@@ -102,6 +156,13 @@ class MainWindow(QMainWindow, WindowSystemController):
 
         self._activate(False)
 
+        self.apply_settings()
+
+    @pyqtSlot()
+    def apply_settings(self):
+        settings = QSettings()
+        self.restoreGeometry((settings.value("main_window/geometry", QByteArray())))
+
     def set_application_arguments(self, arguments):
         project_opened_in_arg = False
         for arg in arguments:
@@ -123,6 +184,7 @@ class MainWindow(QMainWindow, WindowSystemController):
                 return
         cfg.data.load_database(0, '../../resources/plume_test_project.sqlite')
 
+        # set default save path other than test project file itself
         from os.path import expanduser
         home = expanduser("~")
         database = cfg.data.get_database(0)
@@ -162,7 +224,7 @@ class MainWindow(QMainWindow, WindowSystemController):
 
     @pyqtSlot()
     def launch_open_dialog(self):
-        working_directory = QDir.homePath()
+        working_directory = QDir().homePath()
         fileName, selectedFilter = QFileDialog.getOpenFileName(
             self,
             _("Open"),
@@ -172,10 +234,10 @@ class MainWindow(QMainWindow, WindowSystemController):
 
         if fileName is None:
             return
-        if cfg.core.project.is_open() == True:
+        if cfg.data.is_database_open:
             if self.launch_close_dialog() == QMessageBox.Cancel:
                 return
-        cfg.core.project.open(fileName)
+        cfg.data.load_database(0, fileName)
 
         self.setWindowTitle("Plume Creator - " + fileName)
 
@@ -241,7 +303,9 @@ class MainWindow(QMainWindow, WindowSystemController):
         if result == QMessageBox.Cancel:
             event.ignore()
         else:
+            QSettings().setValue("main_window/geometry", self.saveGeometry())
             event.accept()
+
 
 from PyQt5.QtWidgets import QStackedWidget
 from .window_system import WindowSystemParentWidget
@@ -339,7 +403,6 @@ class SideBar(QWidget, WindowSystemActionHandler):
         for button in self.side_bar_button_list:
             self.side_bar_button_list.remove(button)
             button.deleteLater()
-            del button
         self.side_bar_button_list = []
 
     def update_from_window_system_ctrl(self):
@@ -349,6 +412,7 @@ class SideBar(QWidget, WindowSystemActionHandler):
             def __init__(self, parent, action):
                 super(SideBarButton, self).__init__(parent)
                 self.setCheckable(True)
+                self.setAutoRaise(True)
                 self.setDefaultAction(action)
                 self._prop = action.property("sub_window_object_name")
                 self.setProperty("sub_window_object_name", self._prop)
@@ -364,6 +428,7 @@ class SideBar(QWidget, WindowSystemActionHandler):
                 menu.exec_(self.mapToGlobal(event.pos()))
 
                 return QToolButton.contextMenuEvent(self, event)
+
 
         WindowSystemActionHandler.update_from_window_system_ctrl(self)
         self.clear()

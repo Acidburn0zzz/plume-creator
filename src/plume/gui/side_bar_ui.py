@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/cyril/Devel/workspace_eric/plume-creator/src/plume/gui/side_bar.ui'
+# Form implementation generated from reading ui file '/home/cyril/Devel/plume/plume-creator/src/plume/gui/side_bar.ui'
 #
-# Created by: PyQt5 UI code generator 5.4.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,18 +11,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_SideBar(object):
     def setupUi(self, SideBar):
         SideBar.setObjectName("SideBar")
-        SideBar.resize(104, 508)
+        SideBar.resize(63, 146)
         self.verticalLayout = QtWidgets.QVBoxLayout(SideBar)
-        self.verticalLayout.setSpacing(2)
         self.verticalLayout.setContentsMargins(2, 2, 2, 2)
+        self.verticalLayout.setSpacing(2)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.plumeMenuButton = QtWidgets.QToolButton(SideBar)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/pics/plume-creator.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.plumeMenuButton.setIcon(icon)
-        self.plumeMenuButton.setIconSize(QtCore.QSize(48, 48))
-        self.plumeMenuButton.setObjectName("plumeMenuButton")
-        self.verticalLayout.addWidget(self.plumeMenuButton)
         self.actionLayout = QtWidgets.QVBoxLayout()
         self.actionLayout.setSpacing(3)
         self.actionLayout.setObjectName("actionLayout")
@@ -36,5 +29,4 @@ class Ui_SideBar(object):
     def retranslateUi(self, SideBar):
 
         SideBar.setWindowTitle(_("Form"))
-        self.plumeMenuButton.setText(_("Menu"))
 
