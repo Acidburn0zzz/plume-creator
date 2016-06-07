@@ -134,7 +134,7 @@ class MainWindow(QMainWindow, WindowSystemController):
         self._sub_window_action_group.addAction(self.ui.actionInfo)
 
        # switch to Write panel by default
-        self.ui.actionWrite.trigger()
+        self.ui.actionWelcome.trigger()
 
 
 
@@ -192,6 +192,9 @@ class MainWindow(QMainWindow, WindowSystemController):
 
         self.setWindowTitle("Plume Creator - TEST")
 
+        # switch to Write panel
+        self.ui.actionWrite.trigger()
+
         # self.undo_view = QUndoView(cfg.undo_group, None)
         # self.undo_view.show()
 
@@ -240,6 +243,9 @@ class MainWindow(QMainWindow, WindowSystemController):
         cfg.data.load_database(0, fileName)
 
         self.setWindowTitle("Plume Creator - " + fileName)
+
+        # switch to Write panel
+        self.ui.actionWrite.trigger()
 
     @pyqtSlot()
     def launch_close_dialog(self):
