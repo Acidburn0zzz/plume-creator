@@ -1,16 +1,19 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.4
 
 Item {
     property alias open_project_button: open_project_button
     property alias recent_list_view: recent_list_view
     property alias new_project: new_project
+    property alias base: base
     anchors.fill: parent
+    SystemPalette { id: myPalette; colorGroup: SystemPalette.Active}
+
 
     Rectangle {
-        id: rectangle1
-        color: "#ffffff"
+        id: base
+        color: myPalette.window
         anchors.fill: parent
 
         GridLayout {
@@ -41,6 +44,7 @@ Item {
                 id: open_project_button
                 text: qsTr("Open project")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
             }
 
 

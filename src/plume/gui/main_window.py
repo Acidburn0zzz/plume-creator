@@ -20,7 +20,6 @@ from PyQt5.Qt import QToolButton, pyqtSlot, QUndoGroup, QSettings, QByteArray
 from . import cfg
 from .main_window_ui import Ui_MainWindow
 from .preferences import Preferences
-from .start_window import StartWindow
 from .about_plume import AboutPlume
 from .signal_hub import SignalHub
 import os.path
@@ -143,7 +142,6 @@ class MainWindow(QMainWindow, WindowSystemController):
         self.ui.actionOpen_test_project.triggered.connect(
             self.launch_open_test_project)
         self.ui.actionPreferences.triggered.connect(self.launch_preferences)
-        self.ui.actionStart_window.triggered.connect(self.launch_start_window)
         self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSave_as.triggered.connect(self.launch_save_as_dialog)
         self.ui.actionOpen.triggered.connect(self.launch_open_dialog)
@@ -201,11 +199,6 @@ class MainWindow(QMainWindow, WindowSystemController):
     @pyqtSlot()
     def launch_preferences(self):
         pref = Preferences(self)
-        pref.exec_()
-
-    @pyqtSlot()
-    def launch_start_window(self):
-        pref = StartWindow(self)
         pref.exec_()
 
     @pyqtSlot()
@@ -419,6 +412,9 @@ class SideBar(QWidget, WindowSystemActionHandler):
                 super(SideBarButton, self).__init__(parent)
                 self.setCheckable(True)
                 self.setAutoRaise(True)
+                self.setIconSize(QSize(40, 40))
+                self.setFixedSize(60, 60)
+                self.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
                 self.setDefaultAction(action)
                 self._prop = action.property("sub_window_object_name")
                 self.setProperty("sub_window_object_name", self._prop)
@@ -444,7 +440,6 @@ class SideBar(QWidget, WindowSystemActionHandler):
             action.toggled.connect(self.action_toggled_slot)
 
             button = SideBarButton(self, action)
-            button.setIconSize(QSize(48, 48))
             self.side_bar_button_list.append(button)
             self.ui.actionLayout.addWidget(button)
             self.side_bar_button_list.append(button)

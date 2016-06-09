@@ -27,7 +27,6 @@ if __name__ == '__main__':
         app.setApplicationName('Plume Creator')
         QSettings.setDefaultFormat(QSettings.IniFormat)
 
-
     # app.setStyle(QStyleFactory.create("fusion"))
     # palette = QPalette()
     # palette.setColor(QPalette.Window, QColor(53,53,53))
