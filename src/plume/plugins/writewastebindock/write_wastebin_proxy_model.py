@@ -41,7 +41,6 @@ class WriteWastebinProxyModel(QSortFilterProxyModel):
 
         # get source model index for current row
 
-
         source_index = self.sourceModel().index(source_row, self.filterKeyColumn(), source_parent)
         if source_index.isValid():
 
@@ -49,13 +48,16 @@ class WriteWastebinProxyModel(QSortFilterProxyModel):
             # then current index matches the filter as well
 
             row_count = self.sourceModel().rowCount(source_index)
+            child_result = []
             for i in range(row_count):
-                self.filterAcceptsRow(i, source_index)
+                child_result.append(self.filterAcceptsRow(i, source_index))
+            if child_result.count(True) > 0:
+                return True
 
             # check current index itself:
 
             deleted = source_index.data(self.sourceModel().DeletedRole)
-            if deleted == True:
+            if deleted:
                 key = self.sourceModel().data(source_index, self.filterRole())
                 self.filterRegExp().indexIn(key)
                 if self.filterRegExp().captureCount() > 0:
