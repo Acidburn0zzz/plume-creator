@@ -52,7 +52,7 @@ class NoteTreeView(QTreeView):
             self._two_clicks_checkpoint = False
         elif self._one_click_checkpoint == True:  # second click
             note_id = index.data(SheetTreeModel.IdRole)
-            cfg.window.note_sub_window.open_note(note_id)
+            cfg.window.note_panel.open_note(note_id)
 
             self._two_clicks_checkpoint = True
 

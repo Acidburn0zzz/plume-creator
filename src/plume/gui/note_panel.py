@@ -56,6 +56,9 @@ class NotePanel(SubWindow):
         # subscribe
         cfg.data_subscriber.subscribe_update_func_to_domain(0, self._clear_project,  "database_closed")
 
+    def open_note(self, note_id: int):
+        pass
+
     def _activate(self, value=True):
         if value is True:
             self.tree_model.reset_model()
@@ -79,7 +82,7 @@ class NoteSubWindow(QMainWindow):
 
     def __init__(self, parent=None):
 
-        super(NoteWindow, self).__init__(parent)
+        super(NoteSubWindow, self).__init__(parent)
 
         self.ui = Ui_WriteTab()
         central_widget = QWidget()
