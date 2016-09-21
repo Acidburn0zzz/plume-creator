@@ -7,7 +7,16 @@ from data.data import Data
 from data import subscriber
 from gui.main_window import MainWindow
 from gui import cfg, plugins,  pics_rc
-import sys, platform
+import sys, os, platform
+# import ctypes
+
+
+# _df = os.environ.get('PLUME_DEVELOP_DATA_BUILD_FROM', None)
+# if _df and os.path.exists(_df):
+#     sys.path.append(_df)
+# from ctypes import cdll
+# cdll.LoadLibrary(_df + '/libplmdata.so.1')
+# import plmdata
 
 if __name__ == '__main__':
 
@@ -55,5 +64,8 @@ if __name__ == '__main__':
     del arguments[0]
     window.set_application_arguments(arguments)  # load project
     window.show()
+
+    # da = plmdata.PLMData()
+    # da.write().setTitle(0, 0, "e")
 
     sys.exit(app.exec_())

@@ -14,6 +14,7 @@ class NotesDockPlugin(gui_plugins.GuiWriteSubWindowDockPlugin):
     '''
     is_builtin_plugin = True
     ignore = False
+
     def __init__(self):
         '''
         Constructor

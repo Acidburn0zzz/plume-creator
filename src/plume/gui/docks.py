@@ -53,7 +53,6 @@ class DockSystem(QObject):
             # add there other dicts with built-in docks
             self.dock_type_dict = note_panel_dock_plugin_dict
 
-
     def split_dock(self, dock):
         '''
         function:: split_dock(dock)
@@ -61,7 +60,6 @@ class DockSystem(QObject):
         '''
         area = self.main_window.dockWidgetArea(dock)
         self.add_dock(dock.current_type, area)
-        pass
 
     def add_dock(self, type_str, area=Qt.RightDockWidgetArea):
         '''
